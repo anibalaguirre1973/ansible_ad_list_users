@@ -20,13 +20,13 @@
     - name: Validate required parameters
       ansible.builtin.fail:
         msg: "Missing required parameter: {{ item }}"
-      when: item.item_a is not defined or item.item_a is none or item.item_a == ""
-      loop: "{{ vars }}"
-      #loop:
-      #  - ad_server
-      #  - ad_domain
-      #  - ad_username
-      #  - ad_password
+      when: item is not defined or item is none or item == ""
+      #loop: "{{ vars }}"
+      loop:
+        - ad_server
+        - ad_domain
+        - ad_username
+        - ad_password
 
       #when: vars[item] == ""
 
