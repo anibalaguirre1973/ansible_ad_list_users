@@ -8,7 +8,7 @@
   #   ad_domain: "{{ ad_domain | default('') }}"
   #   ad_username: "{{ ad_username | default('') }}"
   #   ad_password: "{{ ad_password | default('') }}"
-    user_limit: "{{ user_limit | default(100) | int }}"
+    user_limit: "{{ user_limit | default(100) }}"
     output_format: "{{ output_format | default('table') }}"
     search_base: "{{ search_base | default('') }}"
     user_filter: "{{ user_filter | default('*') }}"
