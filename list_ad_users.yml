@@ -1,7 +1,7 @@
 ---
 - name: List Active Directory Users using Microsoft AD Collection
-  hosts: localhost
-  gather_facts: false
+  hosts: all
+  gather_facts: true
   vars:
     # Command line parameters with defaults
     ad_server: "{{ ad_server | default('') }}"
@@ -13,7 +13,7 @@
     search_base: "{{ search_base | default('') }}"
     user_filter: "{{ user_filter | default('*') }}"
     organizational_unit: "{{ organizational_unit | default('') }}"
-    
+
   pre_tasks:
     - name: Validate required parameters
       fail:
@@ -24,7 +24,7 @@
         - ad_domain
         - ad_username
         - ad_password
-        
+
     - name: Display configuration
       debug:
         msg:
@@ -48,7 +48,7 @@
         state: present
       register: ad_users_query
       failed_when: false
-      
+
     # Alternative approach using object module for querying
     - name: Query AD users with microsoft.ad.object
       microsoft.ad.object:
@@ -71,19 +71,19 @@
           - enabled
         search_scope: subtree
       register: ad_users_result
-      
+
     - name: Process and limit user results
       set_fact:
         ad_users: "{{ ad_users_result.objects[:user_limit] }}"
         total_users_found: "{{ ad_users_result.objects | length }}"
       when: ad_users_result.objects is defined
-        
+
     - name: Display user count summary
       debug:
         msg:
           - "Total users found: {{ total_users_found | default(0) }}"
           - "Users displayed (limited to): {{ ad_users | default([]) | length }}"
-          
+
     - name: Display users in table format
       debug:
         msg: |
@@ -99,18 +99,18 @@
           {% set status = 'Enabled' if user.enabled else 'Disabled' %}
           {{ '%-20s %-30s %-35s %-15s %-20s %-10s' | format(username[:20], display_name[:30], email[:35], department[:15], title[:20], status) }}
           {% endfor %}
-      when: 
+      when:
         - output_format == 'table'
         - ad_users is defined
         - ad_users | length > 0
-      
+
     - name: Display users in JSON format
       debug:
         var: ad_users
-      when: 
+      when:
         - output_format == 'json'
         - ad_users is defined
-      
+
     - name: Display users in detailed format
       debug:
         msg:
@@ -129,11 +129,11 @@
       loop_control:
         loop_var: user
         label: "{{ user.sAMAccountName | default('Unknown') }}"
-      when: 
+      when:
         - output_format == 'detailed'
         - ad_users is defined
         - ad_users | length > 0
-      
+
     - name: Create CSV export
       copy:
         content: |
@@ -142,18 +142,18 @@
           "{{ user.sAMAccountName | default('N/A') }}","{{ user.displayName | default('N/A') }}","{{ user.mail | default('N/A') }}","{{ user.department | default('N/A') }}","{{ user.title | default('N/A') }}","{{ user.distinguishedName | default('N/A') }}","{{ user.whenCreated | default('N/A') }}","{{ 'Enabled' if user.enabled else 'Disabled' }}","{{ user.lastLogon | default('N/A') }}"
           {% endfor %}
         dest: "./ad_users_export_{{ ansible_date_time.date }}_{{ ansible_date_time.time | replace(':', '-') }}.csv"
-      when: 
+      when:
         - output_format == 'csv'
         - ad_users is defined
         - ad_users | length > 0
       delegate_to: localhost
-      
+
     - name: Display message when no users found
       debug:
         msg: "No users found matching the specified criteria."
-      when: 
+      when:
         - ad_users is not defined or ad_users | length == 0
-        
+
   post_tasks:
     - name: Summary
       debug:
