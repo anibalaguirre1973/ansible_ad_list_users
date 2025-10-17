@@ -17,16 +17,36 @@
   #pre_tasks:
   tasks:
 
-    - name: Validate required parameters
-      ansible.builtin.fail:
-        msg: "Missing required parameter: {{ item }}"
-      when: item is not defined or item is none or item == ""
-      #loop: "{{ vars }}"
-      loop:
-        - ad_server
-        - ad_domain
-        - ad_username
-        - ad_password
+    - name: Check for ad_server
+      fail:
+        msg: "Extra variable 'ad_server' is missing or empty."
+      when: ad_server is not defined or ad_server | length == 0
+
+    - name: Check for ad_domain
+      fail:
+        msg: "Extra variable 'ad_domain' is missing or empty."
+      when: ad_domain is not defined or ad_domain | length == 0
+
+    - name: Check for ad_username
+      fail:
+        msg: "Extra variable 'ad_username' is missing or empty."
+      when: ad_username is not defined or ad_username | length == 0
+
+    - name: Check for ad_password
+      fail:
+        msg: "Extra variable 'ad_password' is missing or empty."
+      when: ad_password is not defined or ad_password | length == 0
+
+    #- name: Validate required parameters
+    #  ansible.builtin.fail:
+    #    msg: "Missing required parameter: {{ item }}"
+    #  when: item is not defined or item is none or item == ""
+    #  #loop: "{{ vars }}"
+    #  loop:
+    #    - ad_server
+    #    - ad_domain
+    #    - ad_username
+    #    - ad_password
 
       #when: vars[item] == ""
 
