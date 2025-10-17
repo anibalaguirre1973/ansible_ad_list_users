@@ -2,51 +2,51 @@
 - name: List Active Directory Users using Microsoft AD Collection
   hosts: all
   gather_facts: true
-  # vars:
+  vars:
   #   # Command line parameters with defaults
   #   ad_server: "{{ ad_server | default('') }}"
   #   ad_domain: "{{ ad_domain | default('') }}"
   #   ad_username: "{{ ad_username | default('') }}"
   #   ad_password: "{{ ad_password | default('') }}"
-  #   user_limit: "{{ user_limit | default(100) | int }}"
-  #   output_format: "{{ output_format | default('table') }}"
-  #   search_base: "{{ search_base | default('') }}"
-  #   user_filter: "{{ user_filter | default('*') }}"
-  #   organizational_unit: "{{ organizational_unit | default('') }}"
+    user_limit: "{{ user_limit | default(100) | int }}"
+    output_format: "{{ output_format | default('table') }}"
+    search_base: "{{ search_base | default('') }}"
+    user_filter: "{{ user_filter | default('*') }}"
+    organizational_unit: "{{ organizational_unit | default('') }}"
 
   #pre_tasks:
   tasks:
 
-    - name: Check for ad_server
-      fail:
-        msg: "Extra variable 'ad_server' is missing or empty."
-      when: ad_server is not defined or ad_server | length == 0
+    # - name: Check for ad_server
+    #   fail:
+    #     msg: "Extra variable 'ad_server' is missing or empty."
+    #   when: ad_server is not defined or ad_server | length == 0
 
-    - name: Check for ad_domain
-      fail:
-        msg: "Extra variable 'ad_domain' is missing or empty."
-      when: ad_domain is not defined or ad_domain | length == 0
+    # - name: Check for ad_domain
+    #   fail:
+    #     msg: "Extra variable 'ad_domain' is missing or empty."
+    #   when: ad_domain is not defined or ad_domain | length == 0
 
-    - name: Check for ad_username
-      fail:
-        msg: "Extra variable 'ad_username' is missing or empty."
-      when: ad_username is not defined or ad_username | length == 0
+    # - name: Check for ad_username
+    #   fail:
+    #     msg: "Extra variable 'ad_username' is missing or empty."
+    #   when: ad_username is not defined or ad_username | length == 0
 
-    - name: Check for ad_password
-      fail:
-        msg: "Extra variable 'ad_password' is missing or empty."
-      when: ad_password is not defined or ad_password | length == 0
+    # - name: Check for ad_password
+    #   fail:
+    #     msg: "Extra variable 'ad_password' is missing or empty."
+    #   when: ad_password is not defined or ad_password | length == 0
 
-    #- name: Validate required parameters
-    #  ansible.builtin.fail:
-    #    msg: "Missing required parameter: {{ item }}"
-    #  when: item is not defined or item is none or item == ""
-    #  #loop: "{{ vars }}"
-    #  loop:
-    #    - ad_server
-    #    - ad_domain
-    #    - ad_username
-    #    - ad_password
+    - name: Validate required parameters
+      ansible.builtin.fail:
+        msg: "Missing required parameter: {{ item }}"
+      when: item is not defined or item is none or item == ""
+     #loop: "{{ vars }}"
+      loop:
+        - ad_server
+        - ad_domain
+        - ad_username
+        - ad_password
 
       #when: vars[item] == ""
 
