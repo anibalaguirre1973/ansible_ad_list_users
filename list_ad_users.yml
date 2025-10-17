@@ -74,26 +74,33 @@
       failed_when: false
 
     # Alternative approach using object module for querying
-    - name: Query AD users with microsoft.ad.object
-      microsoft.ad.object:
-        identity: "{{ search_base if search_base else 'DC=' + ad_domain.split('.') | join(',DC=') }}"
-        domain_server: "{{ ad_server }}"
-        domain_username: "{{ ad_username }}@{{ ad_domain }}"
-        domain_password: "{{ ad_password }}"
-        filter: "(&(objectClass=user)(objectCategory=person){{ ('(name=' + user_filter + ')') if user_filter != '*' else '' }})"
-        properties:
-          - sAMAccountName
-          - displayName
-          - mail
-          - department
-          - title
-          - whenCreated
-          - lastLogon
-          - userAccountControl
-          - memberOf
-          - distinguishedName
-          - enabled
-        search_scope: subtree
+    # - name: Query AD users with microsoft.ad.object
+    #   microsoft.ad.object:
+    #     identity: "{{ search_base if search_base else 'DC=' + ad_domain.split('.') | join(',DC=') }}"
+    #     domain_server: "{{ ad_server }}"
+    #     domain_username: "{{ ad_username }}@{{ ad_domain }}"
+    #     domain_password: "{{ ad_password }}"
+    #     filter: "(&(objectClass=user)(objectCategory=person){{ ('(name=' + user_filter + ')') if user_filter != '*' else '' }})"
+    #     properties:
+    #       - sAMAccountName
+    #       - displayName
+    #       - mail
+    #       - department
+    #       - title
+    #       - whenCreated
+    #       - lastLogon
+    #       - userAccountControl
+    #       - memberOf
+    #       - distinguishedName
+    #       - enabled
+    #     search_scope: subtree
+    #   register: ad_users_result
+
+    - name: Get all user accounts
+      microsoft.ad.object_info:
+        filter: ObjectClass -eq 'user' -and objectCategory -eq 'Person'
+        properties: '*' # Request all properties, or specify a list like ['name', 'sAMAccountName', 'userPrincipalName']
+      #delegate_to: your_ad_server_or_management_host # Or remove if running directly on DC
       register: ad_users_result
 
     - name: Process and limit user results
