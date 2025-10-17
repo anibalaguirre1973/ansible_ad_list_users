@@ -16,14 +16,16 @@
 
   pre_tasks:
     - name: Validate required parameters
-      fail:
+      ansible.builtin.fail:
         msg: "Missing required parameter: {{ item }}"
-      when: vars[item] == ""
+      when: item.item_a is not defined or item.item_a is none or item.item_a == ""
       loop:
         - ad_server
         - ad_domain
         - ad_username
         - ad_password
+
+      #when: vars[item] == ""
 
     - name: Display configuration
       debug:
