@@ -14,7 +14,9 @@
     user_filter: "{{ user_filter | default('*') }}"
     organizational_unit: "{{ organizational_unit | default('') }}"
 
-  pre_tasks:
+  #pre_tasks:
+  tasks:
+
     - name: Validate required parameters
       ansible.builtin.fail:
         msg: "Missing required parameter: {{ item }}"
@@ -39,7 +41,6 @@
           - "Search Base: {{ search_base if search_base else 'Domain root' }}"
           - "Organizational Unit: {{ organizational_unit if organizational_unit else 'All OUs' }}"
 
-  tasks:
     - name: Get AD users using Microsoft AD collection
       microsoft.ad.user:
         name: "{{ user_filter }}"
