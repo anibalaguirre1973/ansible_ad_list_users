@@ -2,17 +2,17 @@
 - name: List Active Directory Users using Microsoft AD Collection
   hosts: all
   gather_facts: true
-  vars:
-    # Command line parameters with defaults
-    ad_server: "{{ ad_server | default('') }}"
-    ad_domain: "{{ ad_domain | default('') }}"
-    ad_username: "{{ ad_username | default('') }}"
-    ad_password: "{{ ad_password | default('') }}"
-    user_limit: "{{ user_limit | default(100) | int }}"
-    output_format: "{{ output_format | default('table') }}"
-    search_base: "{{ search_base | default('') }}"
-    user_filter: "{{ user_filter | default('*') }}"
-    organizational_unit: "{{ organizational_unit | default('') }}"
+  # vars:
+  #   # Command line parameters with defaults
+  #   ad_server: "{{ ad_server | default('') }}"
+  #   ad_domain: "{{ ad_domain | default('') }}"
+  #   ad_username: "{{ ad_username | default('') }}"
+  #   ad_password: "{{ ad_password | default('') }}"
+  #   user_limit: "{{ user_limit | default(100) | int }}"
+  #   output_format: "{{ output_format | default('table') }}"
+  #   search_base: "{{ search_base | default('') }}"
+  #   user_filter: "{{ user_filter | default('*') }}"
+  #   organizational_unit: "{{ organizational_unit | default('') }}"
 
   #pre_tasks:
   tasks:
